@@ -1,9 +1,11 @@
 const net = require("net");
+const { IP, PORT } = require("./constants");
+
 // establishes a connection with the game server
 const connect = function () {
   const conn = net.createConnection({
-    host: '165.227.47.243',
-    port: 50541,
+    host: IP,
+    port: PORT
   });
 
   // interpret incoming data as text
@@ -13,6 +15,10 @@ const connect = function () {
   conn.on("data", (data) => {
     console.log(data.toString());
   });
+  conn.on("error", (error) => {
+    console.log(`YOU DIED`)
+    process.exit();
+  });
 
   // on connecting 
   conn.on("connect", () => {
@@ -20,19 +26,13 @@ const connect = function () {
     conn.write("Name: UFO");
   });
 
-  //move the snake up on join
-  // conn.on("connect", () => {
-  //   setInterval(() => {
-  //     conn.write("Move: up");
-  //   }, 500);
-  // });
-  
   return conn;
 };
 
 module.exports = {
   connect,
 };
+
 /*
 - with set interval going, I think we will be looking for key inputs, and when key input, we change direction
 - need to handle error
